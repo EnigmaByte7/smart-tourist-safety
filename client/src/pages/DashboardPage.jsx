@@ -8,13 +8,14 @@ import AlertsFeed from '../components/dashboard/AlertFeeds';
 import RegisterTouristModal from '../components/dashboard/RegisterTouristModal';
 import { API_URL } from '../context/Api';
 import { Toaster, toast } from "react-hot-toast";
+import RegisterSuccessModal from '../components/dashboard/RegisterSuccessModal';
 
 
 const DashboardPage = () => {
   const [tourists, setTourists] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [successData, setSuccessData] = useState(null);
 
   useEffect(() => {
     const fetchInitialTourists = async () => {
@@ -51,16 +52,25 @@ const DashboardPage = () => {
   }, []);
 
 
-  const handleRegisterTourist = async (formData) => {
+const handleRegisterTourist = async (formData) => {
     try {
-        await fetch(`${API_URL}/api/tourists/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        });
+      const res = await fetch(`${API_URL}/api/tourists/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccessData(data); 
         setIsModalOpen(false);
+      } else {
+        toast.error(data.message || 'Registration failed');
+      }
     } catch (error) {
-        console.error("Failed to register tourist:", error);
+      console.error("Failed to register tourist:", error);
+      toast.error('Something went wrong');
     }
   };
 
@@ -92,6 +102,10 @@ const DashboardPage = () => {
         }} 
       />
       <RegisterTouristModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onRegister={handleRegisterTourist} />
+        <RegisterSuccessModal 
+          data={successData} 
+          onClose={() => setSuccessData(null)} 
+        />
       <div className="bg-slate-900 text-white min-h-screen flex flex-col font-sans">
         <header className="bg-slate-800/70 backdrop-blur-sm border-b border-slate-700 p-4 flex justify-between items-center sticky top-0 z-20">
           <h1 className="text-xl font-bold">Tourist Safety Command Center</h1>
