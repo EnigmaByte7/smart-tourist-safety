@@ -104,7 +104,7 @@ const TouristMarker = ({ tourist, onShowTrail }) => {
 
 // The main LiveMap component.
 const LiveMap = ({ tourists }) => {
-  const mapCenter = [23.1815, 79.9864];
+  const mapCenter = [26.916691, 80.9588894];
   const [activeTrail, setActiveTrail] = useState(null);
 
   // --- NEW: State to hold the geo-fence data ---
@@ -143,7 +143,7 @@ const LiveMap = ({ tourists }) => {
   return (
     <>
       <style>{customIconStyles}</style>
-      <MapContainer center={mapCenter} zoom={13} style={{ height: '100%', width: '100%', borderRadius: '8px' }}>
+      <MapContainer center={mapCenter} zoom={20} style={{ height: '100%', width: '100%', borderRadius: '8px' }}>
         <TileLayer url="https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" subdomains={['mt0', 'mt1', 'mt2', 'mt3']} attribution='&copy; Google Maps' />
         
         {tourists.map(tourist => (
